@@ -7,16 +7,30 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Container from "@mui/material/Container";
 import Typo from "@mui/material/Typography";
 import { useState } from "react";
+import api from '../axios/axios';
 
 function Login() {
   const [user, setUser] = useState({ email: "", password: "" });
   const onChange = (event) => {
-    const {name, value} = event.target;
-    setUser({...user, [name]:value}) 
-  }
-  const handleSubmit = (event) =>{
+    const { name, value } = event.target;
+    setUser({ ...user, [name]: value });
+  };
+  const handleSubmit = (event) => {
     event.preventDefault();
-    alert(`Dados informados: Email - "${user.email}", Senha - "${user.password}" `)
+    
+    
+   login();
+  };
+
+  async function login(){
+    await api.postLogin(user).then(
+      (response)=>{
+        alert(response.data.message)
+      },
+      (error)=>{
+        alert(error.response.data.error)
+      }
+    )
   }
 
   return (
@@ -52,9 +66,9 @@ function Login() {
           noValidate
         >
           <TextField
-          sx={{
-            mt: 1
-          }}
+            sx={{
+              mt: 1,
+            }}
             id="email"
             label="Email"
             name="email"
@@ -64,9 +78,9 @@ function Login() {
             onChange={onChange}
           />
           <TextField
-          sx={{
-            mt: 1
-          }}
+            sx={{
+              mt: 1,
+            }}
             id="password"
             label="Senha"
             name="password"

@@ -7,13 +7,16 @@ import Container from "@mui/material/Container";
 import Typo from "@mui/material/Typography";
 import { useState } from "react";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+import api from "../axios/axios"
 
 function Cadastro() {
   const [user, setUser] = useState({
     email: "",
     password: "",
-    age: 0,
+    cpf:"",
+    data_nascimento: 0,
     name: "",
+
   });
   const onChange = (event) => {
     const { name, value } = event.target;
@@ -21,8 +24,20 @@ function Cadastro() {
   };
   const handleSubmit = (event) => {
     event.preventDefault();
-    alert(`Processando cadastro...${'\n'}Cadastro feito!${'\n'}Nome: ${user.name}${'\n'}Idade: ${user.age}${'\n'}E-mail: ${user.email}${'\n'}Senha: ${user.password}`);
+    
+    cadastro();
   };
+
+  async function cadastro() {
+    await api.postCadastro(user).then(
+      (response)=>{
+        alert(response.data.message)
+      },
+      (error)=>{
+        alert(error.response.data.error)
+      }
+    )
+  }
 
   return (
     <Container component="main" maxWidth="xl">
@@ -84,18 +99,32 @@ function Cadastro() {
             value={user.password}
             onChange={onChange}
           />
-
           <TextField
             sx={{
               mt: 1,
             }}
-            id="age"
-            label="Idade"
-            name="age"
+            id="cpf"
+            label="CPF"
+            name="cpf"
+            type="text"
             required
             fullWidth
-            type="number"
-            value={user.age}
+            value={user.cpf}
+            onChange={onChange}
+          />
+          <Typo component="p" sx={{
+            alignSelf: "start"
+          }}>Data de Nascimento:</Typo>
+          <TextField
+            sx={{
+              mt: 1,
+            }}
+            id="data_nascimento"
+            name="data_nascimento"
+            required
+            fullWidth
+            type="date"
+            value={user.data_nascimento}
             onChange={onChange}
           />
 
